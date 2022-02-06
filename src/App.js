@@ -1,43 +1,30 @@
-import React, {useState, useEffect} from "react";
-import Hello from "./Hello";
-import useFetch from "./useFetch";
-import useForm from "./useForm";
+import React, {useState, useRef} from "react"
+import Hello from "./Hello"
+import useFetch from "./useFetch"
+import useForm from "./useForm"
 
 const App = () => {
-  const [values, handleChange] = useForm({ email: "", password: "" });
-  // const [showHello, setShowHello] = useState(true);
-  const [count, setCount] = useState(0)
-
-  const {data, loading} = useFetch(`http://numbersapi.com/${count}/trivia`)
-
-  // useEffect(() => {
-  //   const onMouseMove = e => {
-  //     console.log(e);
-  //   }
-  //   window.addEventListener("mousemove", onMouseMove);
-
-  //   return () => {
-  //     window.removeEventListener("mousemove", onMouseMove);
-  //   }
-  // },[])
-
-  useEffect(() => {
-    localStorage.setItem("count", JSON.stringify(count))
-  },[count])
+  const [values, handleChange] = useForm({ email: "", password: "" })
+  const [showHello, setShowHello] = useState(true)
+  
+  const inputRef = useRef()
+  const hello = useRef(() => console.log('***Hello***'))
 
   return (
     <>
-      {loading ? 'loading...' : data}
-      <button onClick={() => setCount(count => count + 1)}>Click</button>
-      {/* <button onClick={() => setShowHello(!showHello)}>Toggle</button>
-      {showHello && <Hello/>} */}
-      <input name="email" value={values.email} onChange={handleChange} />
+      <button onClick={() => setShowHello(!showHello)}>Toggle</button>
+      {showHello && <Hello/>}
+      <input ref={inputRef} name="email" value={values.email} onChange={handleChange} />
       <input
         type="password"
         name="password"
         value={values.password}
         onChange={handleChange}
       />
+      <button onClick={() => {
+        inputRef.current.focus()
+        hello.current()
+      }}>Focus</button>
     </>
   );
 }

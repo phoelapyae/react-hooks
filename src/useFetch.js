@@ -6,7 +6,7 @@ const useFetch = url => {
     
   useEffect(() => {
     return () => {
-      isCurrent.current = false  
+      isCurrent.current = true 
     }
   })
     

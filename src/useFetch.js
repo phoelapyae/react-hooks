@@ -1,8 +1,8 @@
 import {useState, useEffect, useRef} from 'react';
 
-const useFetch = url => {
+export const useFetch = url => {
   const [state, setState] = useState({ data: null, loading: true })
-    const isCurrent = useRef(true);
+  const isCurrent = useRef(true)
     
   useEffect(() => {
     return () => {
@@ -26,5 +26,3 @@ const useFetch = url => {
 
   return state
 }
-
-export default useFetch;

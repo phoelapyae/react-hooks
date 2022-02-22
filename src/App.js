@@ -1,48 +1,35 @@
-import React, { useReducer, useState } from "react"
-
-function reducer(state,action) {
-  switch (action.type) {
-    case "add-todo":
-      return {
-        todos: [...state.todos, { text: action.text, completed: false }],
-        totalCount: state.totalCount + 1
-      }
-    case "toggle-todo":
-      return {
-        todos: state.todos.map((t, idx) => idx === action.idx ? { ...t, completed: !t.completed } : t),
-        totalCount: state.totalCount
-      }
-    default: 
-      return state
-  }
-}
+import React, { useState, useMemo } from "react"
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom"
+import About from "./pages/About"
+import Index from "./pages/Index"
+import { UserContext } from "./UserContext"
 
 const App = () => {
-  const [{ todos, totalCount }, dispatch] = useReducer(reducer, { todos: [], totalCount: 0 })
-  const [text, setText]   = useState('')
+  const [user, setUser] = useState(null)
   
+  const value = useMemo(() => ({ user, setUser}), [user, setUser])
+
   return (
-    <>
-      <form onSubmit={e => {
-        e.preventDefault()
-        dispatch({ type: "add-todo", text })
-        setText("")
-      }}>
-        <input value={text} onChange={e => setText(e.target.value)}/>
-      </form>
-      <p>Number of counts: {totalCount}</p>
-      {todos.map((t, idx) => (
-        <div
-          key={t.text}
-          onClick={() => dispatch({ type: "toggle-todo", idx })}
-          style={{
-            textDecoration: t.completed ? "line-through" : ""
-          }}
-        >
-          {t.text}
-        </div>
-      ))}
-    </>
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about/">About</Link>
+            </li>
+          </ul>
+        </nav>
+        <UserContext.Provider value={value}>
+          <Routes>
+            <Route path="/" exact element={<Index/>}></Route>
+            <Route path="/about/" element={<About/>}></Route>
+          </Routes>
+        </UserContext.Provider>
+      </div>
+    </Router>
   )
 }
 
